@@ -29,11 +29,11 @@
             background: linear-gradient(to right, #3b82f6 0%, #60a5fa 25%, #f87171 75%, #ef4444 100%);
             border: 2px solid #94a3b8;
         }
-        input {
+        input[type="number"] {
             -moz-appearance: textfield;
         }
         input[type="number"]::-webkit-inner-spin-button,
-        input ::-webkit-outer-spin-button {
+        input[type="number"]::-webkit-outer-spin-button {
             -webkit-appearance: none;
             margin: 0;
         }
@@ -44,6 +44,7 @@
 </head>
 <body class="p-6">
     <div class="max-w-5xl mx-auto">
+
         <!-- EN-TÊTE -->
         <div class="flex justify-between items-center mb-8">
             <button onclick="showInfo()" 
@@ -137,22 +138,22 @@
 
                 <div class="mt-6">
                     <p class="text-violet-800 text-sm font-medium mb-2">Commentaire</p>
-                    <div id="commentaire" class="bg-white/60 border border-violet-200 p-4 rounded-2xl min-h- text-sm leading-relaxed text-violet-900"></div>
+                    <div id="commentaire" class="bg-white/60 border border-violet-200 p-4 rounded-2xl min-h-[60px] text-sm leading-relaxed text-violet-900"></div>
                 </div>
             </div>
         </div>
 
-        <!-- ========== BOX DES BACS (VALEURS INVERSÉES) ========== -->
+        <!-- ========== BOX DES BACS ========== -->
         <div class="mt-8 bacs-box p-8 rounded-3xl shadow-xl text-white">
             <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
-                <!-- GAUCHE (BLEU) → Bac bleu = e -->
+                <!-- GAUCHE (BLEU) -->
                 <div class="text-center md:text-left">
                     <p class="text-blue-100 text-sm font-medium mb-2">Quantité dans le bac bleu</p>
                     <p id="bacBleu" class="text-5xl font-bold tracking-tight">—</p>
                     <p class="text-blue-200 text-sm mt-1">= Seuil de déclenchement</p>
                 </div>
 
-                <!-- DROITE (ROUGE) → Bac rouge = E - e -->
+                <!-- DROITE (ROUGE) -->
                 <div class="text-center md:text-right">
                     <p class="text-red-100 text-sm font-medium mb-2">Quantité dans le bac rouge</p>
                     <p id="bacRouge" class="text-5xl font-bold tracking-tight">—</p>
@@ -188,7 +189,7 @@
                 <button onclick="hideInfo()" class="text-3xl leading-none hover:text-gray-200">×</button>
             </div>
             <div class="p-8 text-gray-700 leading-relaxed">
-                <p class="mb-4 font-medium">Simulation du symbole d'un chariot selon le standard défini :</p>
+                <p class="mb-4 font-medium">Simulation du symbole d’un chariot selon le standard défini :</p>
                 <ul class="space-y-3 text-sm mb-6">
                     <li><strong>E = c × UDI</strong> (Pas de conditionnement coefficient unitaire)</li>
                     <li><strong>e = E × 0,4</strong></li>
@@ -196,7 +197,7 @@
                     <li><strong>Intervalle minimum entre deux flashages = 22 jours</strong></li>
                 </ul>
                 <p class="text-center font-bold text-emerald-800 text-lg leading-tight border-t border-gray-200 pt-6">
-                    L'objectif est d'assurer un approvisionnement optimal, sans défaut,<br>
+                    L’objectif est d’assurer un approvisionnement optimal, sans défaut,<br>
                     en évitant à la fois les surstocks et les ruptures.
                 </p>
             </div>
@@ -272,4 +273,86 @@
                     lancementAffiche = false;
                 } else {
                     stock -= conso;
-                    html +=
+                    html += 'Jour ' + j + ' → Stock = ' + Math.round(stock) + '<br>';
+                }
+            }
+            return html;
+        }
+
+        function dessinerCourbe(E, consoParJour) {
+            const ctx = document.getElementById('stockChart');
+            if (stockChart) stockChart.destroy();
+
+            let stock = E;
+            const jours = [], stocks = [];
+
+            for (let j = 1; j <= 250; j++) {
+                if (stock - consoParJour < consoParJour) stock += E;
+                stock -= consoParJour;
+                jours.push(j);
+                stocks.push(Math.round(stock));
+            }
+
+            stockChart = new Chart(ctx, {
+                type: 'line',
+                data: { 
+                    labels: jours, 
+                    datasets: [{ 
+                        label: 'Niveau de Stock', 
+                        data: stocks, 
+                        borderColor: '#e11d48', 
+                        borderWidth: 3, 
+                        tension: 0.4, 
+                        pointRadius: 0 
+                    }] 
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        y: { beginAtZero: true, grid: { color: '#e5e7eb' } },
+                        x: { grid: { color: '#e5e7eb' }, ticks: { maxTicksLimit: 12 } }
+                    }
+                }
+            });
+        }
+
+        function lancerSimulation() {
+            let keJour = parseFloat(document.getElementById('ke_jour').value) || 0;
+            const udi = parseFloat(document.getElementById('udi').value) || 0;
+            const delai = parseFloat(document.getElementById('delai').value) || 0;
+
+            if (udi <= 0 || keJour <= 0) {
+                alert("Veuillez remplir UDI et au moins un champ KE");
+                return;
+            }
+
+            const res = simulerConsommation(udi, keJour, delai);
+
+            document.getElementById('E').textContent = res.E;
+            document.getElementById('e').textContent = res.e;
+            document.getElementById('coef').textContent = res.Coef;
+            document.getElementById('intervalle').textContent = res.Intervalle + " jours";
+            document.getElementById('commentaire').textContent = 
+                'Commande de ' + res.E + ' pièces tous les ' + res.Intervalle + ' jours (coef ' + res.Coef + ')';
+
+            document.getElementById('bacBleu').textContent = res.e;
+            document.getElementById('bacRouge').textContent = res.E - res.e;
+
+            document.getElementById('simulation_text').innerHTML = genererSimulationText(res.E, keJour, res.e);
+            dessinerCourbe(res.E, keJour);
+        }
+
+        function showInfo() {
+            document.getElementById('infoModal').classList.remove('hidden');
+        }
+
+        function hideInfo() {
+            document.getElementById('infoModal').classList.add('hidden');
+        }
+
+        window.onload = function() {};
+    </script>
+</body>
+</html>
