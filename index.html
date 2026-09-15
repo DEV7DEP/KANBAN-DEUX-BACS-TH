@@ -24,6 +24,10 @@
         .result-box {
             background: linear-gradient(135deg, #1e40af, #3b82f6);
         }
+        .bacs-box {
+            background: linear-gradient(to right, #3b82f6 0%, #60a5fa 25%, #f87171 75%, #ef4444 100%);
+            border: 2px solid #94a3b8;
+        }
         input[type="number"] {
             -moz-appearance: textfield;
         }
@@ -64,7 +68,6 @@
                 </h2>
                 
                 <div class="space-y-6">
-                    <!-- Ligne 1 -->
                     <div class="grid grid-cols-2 gap-5">
                         <div>
                             <label class="block text-sm font-medium text-gray-600 mb-1.5">Unité de distribution (UDI)</label>
@@ -79,7 +82,6 @@
                         </div>
                     </div>
 
-                    <!-- Ligne 2 -->
                     <div class="grid grid-cols-2 gap-5">
                         <div>
                             <label class="block text-sm font-medium text-gray-600 mb-1.5">Consommation (pièces / jour)</label>
@@ -111,35 +113,49 @@
                 </h2>
 
                 <div class="grid grid-cols-2 gap-5">
-                    <!-- E -->
                     <div class="bg-white/10 backdrop-blur-sm rounded-2xl p-5 border border-white/10">
                         <p class="text-blue-100 text-sm font-medium mb-2 leading-tight">Taille du lot de réapprovisionnement</p>
                         <p id="E" class="text-4xl font-bold text-yellow-300 tracking-tight">—</p>
                     </div>
 
-                    <!-- e -->
                     <div class="bg-white/10 backdrop-blur-sm rounded-2xl p-5 border border-white/10">
                         <p class="text-blue-100 text-sm font-medium mb-2 leading-tight">Seuil de déclenchement de commande</p>
                         <p id="e" class="text-4xl font-bold text-yellow-300 tracking-tight">—</p>
                     </div>
 
-                    <!-- Coef -->
                     <div class="bg-white/10 backdrop-blur-sm rounded-2xl p-5 border border-white/10">
                         <p class="text-blue-100 text-sm font-medium mb-2 leading-tight">Coefficient multiplicateur</p>
                         <p id="coef" class="text-3xl font-bold text-yellow-300">—</p>
                     </div>
 
-                    <!-- Intervalle -->
                     <div class="bg-white/10 backdrop-blur-sm rounded-2xl p-5 border border-white/10">
                         <p class="text-blue-100 text-sm font-medium mb-2 leading-tight">Jours entre deux réapprovisionnements</p>
                         <p id="intervalle" class="text-3xl font-bold text-yellow-300">—</p>
                     </div>
                 </div>
 
-                <!-- Commentaire -->
                 <div class="mt-6">
                     <p class="text-blue-100 text-sm font-medium mb-2">Commentaire</p>
                     <div id="commentaire" class="bg-white/10 border border-white/10 p-4 rounded-2xl min-h-[60px] text-sm leading-relaxed"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ========== NOUVEAU BOX DES BACS (PLEINE LARGEUR) ========== -->
+        <div class="mt-8 bacs-box p-8 rounded-3xl shadow-xl text-white">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+                <!-- BAC BLEU (GAUCHE) -->
+                <div class="text-center md:text-left">
+                    <p class="text-blue-100 text-sm font-medium mb-2">Quantité dans le bac bleu</p>
+                    <p id="bacBleu" class="text-5xl font-bold tracking-tight">—</p>
+                    <p class="text-blue-200 text-sm mt-1">= Seuil de déclenchement</p>
+                </div>
+
+                <!-- BAC ROUGE (DROITE) -->
+                <div class="text-center md:text-right">
+                    <p class="text-red-100 text-sm font-medium mb-2">Quantité dans le bac rouge</p>
+                    <p id="bacRouge" class="text-5xl font-bold tracking-tight">—</p>
+                    <p class="text-red-200 text-sm mt-1">= Taille du lot − Seuil</p>
                 </div>
             </div>
         </div>
@@ -312,6 +328,7 @@
 
             const res = simulerConsommation(udi, keJour, delai);
 
+            // Affichage des résultats principaux
             document.getElementById('E').textContent = res.E;
             document.getElementById('e').textContent = res.e;
             document.getElementById('coef').textContent = res.Coef;
@@ -319,6 +336,11 @@
             document.getElementById('commentaire').textContent = 
                 `Commande de ${res.E} pièces tous les ${res.Intervalle} jours (coef ${res.Coef})`;
 
+            // Affichage des bacs
+            document.getElementById('bacBleu').textContent = res.e;
+            document.getElementById('bacRouge').textContent = res.E - res.e;
+
+            // Simulation et graphique
             document.getElementById('simulation_text').innerHTML = genererSimulationText(res.E, keJour, res.e);
             dessinerCourbe(res.E, keJour);
         }
