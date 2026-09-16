@@ -141,18 +141,19 @@
                     <div id="commentaire" class="bg-white/60 border border-violet-200 p-4 rounded-2xl min-h-[60px] text-sm leading-relaxed text-violet-900"></div>
                 </div>
             </div>
+        </div>
 
-        <!-- ========== BOX DES BACS (VALEURS INVERSÉES) ========== -->
+        <!-- ========== BOX DES BACS (PLEINE LARGEUR) ========== -->
         <div class="mt-8 bacs-box p-8 rounded-3xl shadow-xl text-white">
             <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
-                <!-- GAUCHE (BLEU) → maintenant E - e -->
+                <!-- GAUCHE (BLEU) -->
                 <div class="text-center md:text-left">
                     <p class="text-blue-100 text-sm font-medium mb-2">Quantité dans le bac bleu</p>
                     <p id="bacBleu" class="text-5xl font-bold tracking-tight">—</p>
                     <p class="text-blue-200 text-sm mt-1">= Taille du lot − Seuil</p>
                 </div>
 
-                <!-- DROITE (ROUGE) → maintenant e -->
+                <!-- DROITE (ROUGE) -->
                 <div class="text-center md:text-right">
                     <p class="text-red-100 text-sm font-medium mb-2">Quantité dans le bac rouge</p>
                     <p id="bacRouge" class="text-5xl font-bold tracking-tight">—</p>
@@ -336,9 +337,9 @@
             document.getElementById('commentaire').textContent = 
                 'Commande de ' + res.E + ' pièces tous les ' + res.Intervalle + ' jours (coef ' + res.Coef + ')';
 
-            // VALEURS INVERSÉES
-            document.getElementById('bacBleu').textContent = res.E - res.e;   // Gauche = E - e
-            document.getElementById('bacRouge').textContent = res.e;          // Droite = e
+            // Valeurs inversées dans le box des bacs
+            document.getElementById('bacBleu').textContent = res.E - res.e;
+            document.getElementById('bacRouge').textContent = res.e;
 
             document.getElementById('simulation_text').innerHTML = genererSimulationText(res.E, keJour, res.e);
             dessinerCourbe(res.E, keJour);
