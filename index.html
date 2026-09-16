@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SIMULATION D'UN SYMBOLE CHARIOT</title>
+    <title>Simulation d’un symbole chariot</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
@@ -53,7 +53,7 @@
                 INFO
             </button>
             
-                        <div class="text-center">
+            <div class="text-center">
                 <h1 class="text-3xl md:text-4xl font-bold text-slate-800 tracking-tight">
                     Simulation d’un symbole chariot
                 </h1>
@@ -61,11 +61,13 @@
                     Calculateur Kanban
                 </p>
             </div>
+            <div class="w-10"></div>
+        </div>
 
         <!-- ========== DONNÉES + RÉSULTATS ========== -->
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
 
-                        <!-- DONNÉES D'ENTRÉE -->
+            <!-- DONNÉES D'ENTRÉE -->
             <div class="input-box p-8 rounded-3xl shadow-xl">
                 <h2 class="text-2xl font-semibold mb-7 text-emerald-900 flex items-center gap-3">
                     <i class="fas fa-keyboard text-emerald-700"></i>
@@ -110,7 +112,7 @@
                 </button>
             </div>
 
-            <!-- RÉSULTATS (VIOLET TRÈS CLAIR) -->
+            <!-- RÉSULTATS -->
             <div class="result-box p-8 rounded-3xl shadow-xl">
                 <h2 class="text-2xl font-semibold mb-7 text-violet-900 flex items-center justify-center gap-3">
                     <i class="fas fa-chart-pie text-violet-700"></i>
@@ -118,7 +120,8 @@
                 </h2>
 
                 <div class="grid grid-cols-2 gap-5">
-                                      <div class="relative bg-white/60 backdrop-blur-sm rounded-2xl p-5 border border-violet-200 text-center">
+                    <!-- E -->
+                    <div class="relative bg-white/60 backdrop-blur-sm rounded-2xl p-5 border border-violet-200 text-center">
                         <span class="absolute -top-4 -left-2 text-5xl font-black text-black leading-none select-none">E</span>
                         <p class="text-violet-800 text-sm font-medium mb-2 leading-tight">
                             Taille du lot de réapprovisionnement
@@ -126,6 +129,7 @@
                         <p id="E" class="text-4xl font-bold text-violet-700 tracking-tight">—</p>
                     </div>
 
+                    <!-- e -->
                     <div class="relative bg-white/60 backdrop-blur-sm rounded-2xl p-5 border border-violet-200 text-center">
                         <span class="absolute -top-4 -left-2 text-5xl font-black text-black leading-none select-none">e</span>
                         <p class="text-violet-800 text-sm font-medium mb-2 leading-tight">
@@ -134,11 +138,13 @@
                         <p id="e" class="text-4xl font-bold text-violet-700 tracking-tight">—</p>
                     </div>
 
+                    <!-- Coef -->
                     <div class="bg-white/60 backdrop-blur-sm rounded-2xl p-5 border border-violet-200 text-center">
-                        <p class="text-violet-800 text-sm font-medium mb-2 leading-tight">Coefficient multiplicateur (Nb boites) </p>
+                        <p class="text-violet-800 text-sm font-medium mb-2 leading-tight">Coefficient multiplicateur</p>
                         <p id="coef" class="text-4xl font-bold text-violet-700 tracking-tight">—</p>
                     </div>
 
+                    <!-- Intervalle -->
                     <div class="bg-white/60 backdrop-blur-sm rounded-2xl p-5 border border-violet-200 text-center">
                         <p class="text-violet-800 text-sm font-medium mb-2 leading-tight">Jours entre deux réapprovisionnements</p>
                         <p id="intervalle" class="text-4xl font-bold text-violet-700 tracking-tight">—</p>
@@ -346,7 +352,7 @@
             document.getElementById('commentaire').textContent = 
                 'Commande de ' + res.E + ' pièces tous les ' + res.Intervalle + ' jours (coef ' + res.Coef + ')';
 
-            // Valeurs inversées dans le box des bacs
+            // Valeurs inversées
             document.getElementById('bacBleu').textContent = res.E - res.e;
             document.getElementById('bacRouge').textContent = res.e;
 
