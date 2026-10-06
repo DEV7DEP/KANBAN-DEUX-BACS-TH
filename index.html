@@ -29,6 +29,13 @@
             background: linear-gradient(to right, #3b82f6 0%, #60a5fa 25%, #f87171 75%, #ef4444 100%);
             border: 2px solid #94a3b8;
         }
+        .btn-source {
+            background-color: #93C572;
+            color: #14532d;
+        }
+        .btn-source:hover {
+            background-color: #7fb35c;
+        }
         input[type="number"] {
             -moz-appearance: textfield;
         }
@@ -47,11 +54,19 @@
 
         <!-- EN-TÊTE -->
         <div class="flex justify-between items-center mb-8">
-            <button onclick="showInfo()" 
-                    class="flex items-center gap-2 bg-white hover:bg-gray-100 text-gray-700 px-5 py-3 rounded-2xl shadow-md font-medium transition">
-                <i class="fas fa-info-circle text-blue-600"></i>
-                INFO
-            </button>
+            <div class="flex items-center gap-3">
+                <button onclick="showInfo()" 
+                        class="flex items-center gap-2 bg-white hover:bg-gray-100 text-gray-700 px-5 py-3 rounded-2xl shadow-md font-medium transition">
+                    <i class="fas fa-info-circle text-blue-600"></i>
+                    INFO
+                </button>
+
+                <button onclick="showSource()" 
+                        class="btn-source flex items-center gap-2 px-5 py-3 rounded-2xl shadow-md font-medium transition">
+                    <i class="fas fa-book text-green-800"></i>
+                    SOURCE
+                </button>
+            </div>
             
             <div class="text-center">
                 <h1 class="text-3xl md:text-4xl font-bold text-slate-800 tracking-tight">
@@ -222,6 +237,28 @@
         </div>
     </div>
 
+    <!-- MODAL SOURCE -->
+    <div id="sourceModal" class="hidden fixed inset-0 bg-black/70 flex items-center justify-center z-50">
+        <div class="modal bg-white rounded-3xl max-w-lg w-full mx-4 shadow-2xl">
+            <div class="btn-source px-6 py-4 flex items-center justify-between rounded-t-3xl" style="cursor:default;">
+                <h3 class="text-xl font-semibold">📚 Sources des données</h3>
+                <button onclick="hideSource()" class="text-3xl leading-none hover:text-gray-600">×</button>
+            </div>
+            <div class="p-8 text-gray-700 leading-relaxed">
+                <p class="mb-4 font-medium">Origine des données utilisées dans le simulateur :</p>
+                <ul class="space-y-3 text-sm">
+                    <li><strong>KE</strong> ---> PUMA 2013</li>
+                    <li><strong>KP</strong> ---> PUMA 3090 BIS</li>
+                    <li><strong>Délai de réapprovisionnement</strong> ---> PUMA 2008</li>
+                    <li><strong>UDI</strong> ---> PUMA 2013</li>
+                </ul>
+            </div>
+            <div class="p-5 border-t flex justify-center">
+                <button onclick="hideSource()" class="bg-gray-100 hover:bg-gray-200 px-10 py-3 rounded-2xl font-medium">Fermer</button>
+            </div>
+        </div>
+    </div>
+
     <script>
         let stockChart = null;
 
@@ -366,6 +403,14 @@
 
         function hideInfo() {
             document.getElementById('infoModal').classList.add('hidden');
+        }
+
+        function showSource() {
+            document.getElementById('sourceModal').classList.remove('hidden');
+        }
+
+        function hideSource() {
+            document.getElementById('sourceModal').classList.add('hidden');
         }
 
         window.onload = function() {};
